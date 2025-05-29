@@ -26,7 +26,7 @@ func main() {
 	var chanlen, bufferSize int64
 	flag.StringVar(&listen, "l", ":11111", "listen addr, e.g. 127.0.0.1:11111")
 	flag.Int64Var(&chanlen, "chanlen", 100, "reader channel size")
-	flag.Int64Var(&bufferSize, "buffsize", 1024*1024, "rader buffer size")
+	flag.Int64Var(&bufferSize, "buffsize", 1024*1024, "reader buffer size")
 	flag.Parse()
 
 	var buffPool = sync.Pool{

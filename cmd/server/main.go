@@ -45,8 +45,13 @@ func main() {
 		}
 		id := uuid.New().String()
 		mc := MutexConn{conn: conn, readChan: make(chan []byte, chanlen)}
+
 		serviceMap.Store(id, &mc)
-		ctx.WriteString(id)
+		_, err = ctx.WriteString(id)
+		if err != nil {
+			log.Println("write id to client", err)
+			return
+		}
 
 		go func() {
 			defer conn.Close()
@@ -72,7 +77,7 @@ func main() {
 		mc := v.(*MutexConn)
 		data := <-mc.readChan
 		_, err := ctx.Write(data)
-		buffPool.Put(data)
+		buffPool.Put(&data)
 		if err != nil {
 			log.Println("write data to client", err)
 			return

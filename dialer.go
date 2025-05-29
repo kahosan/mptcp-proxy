@@ -13,10 +13,17 @@ type targetedDailer struct {
 	label       string
 }
 
-func newOutboundDialer(inputRemoteAddr string, label string) *targetedDailer {
+func newOutboundDialer(inputRemoteAddr string, inputLocalAddr string, label string) *targetedDailer {
+	localAddr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:0", inputLocalAddr))
+	if err != nil {
+		log.Fatal(err)
+	}
 	td := &targetedDailer{
-		localDialer: net.Dialer{},
-		remoteAddr:  inputRemoteAddr,
+		localDialer: net.Dialer{
+			LocalAddr: localAddr,
+		},
+		remoteAddr: inputRemoteAddr,
+		label:      label,
 	}
 	return td
 }
